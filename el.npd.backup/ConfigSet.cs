@@ -34,11 +34,11 @@ namespace el.npd.backup
         {
             for (int i = 0; i < args.Length; i++)
             {
-                string itemParametro = null;
-                var config = this.FirstOrDefault(cp => JoinPrefix(cp.Parametro).Any(pp => args[i].StartsWith(itemParametro = pp)));
+                string iParametro = null;
+                var config = this.FirstOrDefault(cp => JoinPrefix(cp.Parametro).Any(pp => args[i].StartsWith(iParametro = pp)));
                 if (config != null)
                 {
-                    if (args[i] == itemParametro)
+                    if (args[i] == iParametro)
                     {
                         if (args.Length > i + 1)
                         {
@@ -46,14 +46,15 @@ namespace el.npd.backup
                             config.SetValue(args[i]);
                         }
                     }
-                    else if (args[i].StartsWith(itemParametro, true, null))
+                    else if (args[i].StartsWith(iParametro, true, null))
                     {
-                        var valor = args[i].Substring(itemParametro.Length);
+                        var valor = args[i].Substring(iParametro.Length);
                         if (valor.StartsWith(':') || valor.StartsWith('='))
                             valor = valor.Substring(1);
                         config.SetValue(valor);
                     }
                 }
+                else throw new Exception($"parametro '{iParametro}' não é valido");
             }
         }
 

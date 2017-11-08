@@ -12,7 +12,7 @@ namespace el.npd.backup
         public Options(string parametro, string descricao, Action<string> setValue)
         {
             if (string.IsNullOrWhiteSpace(parametro))
-                throw new ArgumentNullException("parametro", "parametro é obrigatório");
+                throw new ArgumentNullException("parametro", "Parametro é obrigatório");
 
             var valorParametro = parametro.Split('|');
             if (valorParametro.Length == 0)

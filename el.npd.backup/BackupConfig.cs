@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace el.npd.backup
 {
@@ -16,31 +14,11 @@ namespace el.npd.backup
         {
             var config = new ConfigSet
             {
-                {
-                    "nome ou ip do servidor",
-                    "h|host|servidor",
-                    v => Servidor = v
-                },
-                {
-                    "porta do servico",
-                    "p|port|porta",
-                    v => Porta = v
-                },
-                {
-                    "nome do usuario",
-                    "u|user|usuario",
-                    v => Usuario = v
-                },
-                {
-                    "senha do usuario",
-                    "w|pass|password|senha",
-                    v => Senha = v
-                },
-                {
-                    "nome do banco de dados",
-                    "d|db|database|banco",
-                    v => BancoDados = v
-                }
+                { "nome ou ip do servidor", "h|host|servidor",          v => Servidor   = v },
+                { "porta do servico",       "p|port|porta",             v => Porta      = v },
+                { "nome do usuario",        "u|user|usuario",           v => Usuario    = v },
+                { "senha do usuario",       "w|pass|password|senha",    v => Senha      = v },
+                { "nome do banco de dados", "d|data|database|banco",    v => BancoDados = v }
             };
 
             config.Parse(args);
