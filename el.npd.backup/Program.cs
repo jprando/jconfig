@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace el.npd.backup
 {
@@ -13,15 +13,16 @@ namespace el.npd.backup
         {
             var tipo = variavel.GetType();
             var props = tipo.GetProperties();
-            Console.WriteLine();
-            Console.WriteLine($" #VARDUMP {tipo.FullName}");
-            Console.WriteLine();
-            foreach (var item in props)
+            using(StringBuilder text = new StringBuilder())
             {
-                var valor = item.GetValue(variavel);
-                Console.WriteLine($" {item.Name,-18} : {valor}");
+                text.WriteLine($"\r\n #VARDUMP {tipo.FullName}\r\n");
+                foreach (var item in props)
+                {
+                    var valor = item.GetValue(variavel);
+                    text.WriteLine($" {item.Name,-18} : {valor}");
+                }
+                Console.WriteLine(text.ToString());
             }
-            Console.WriteLine();
         }
     }
 }
