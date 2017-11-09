@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Collections.Generic;
 
 namespace el.npd.backup
 {
@@ -16,7 +16,8 @@ namespace el.npd.backup
 
         public void Run()
         {
-
+            _config.VarDump();
+            Console.ReadKey();
         }
     }
 }

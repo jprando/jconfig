@@ -2,60 +2,75 @@
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace el.npd.backup
 {
     public class ConfigSet : ICollection<Options>
     {
-        private IList<Options> _lista = new List<Options>();
+        private ICollection<Options> _lista = new Collection<Options>();
 
         public int Count => _lista.Count;
 
         public bool IsReadOnly => _lista.IsReadOnly;
 
-        private IEnumerable<string> JoinPrefix(string[] args)
+        internal void Parse(params string[] args)
         {
-            if (args == null) yield break;
-            foreach (var a in args)
+            Dictionary<string, string> parametros = ObterParametros(args);
+            foreach (KeyValuePair<string, string> item in parametros)
             {
-                if (a.Length == 1)
-                    yield return $"-{a}";
-                else
-                    yield return $"--{a}";
-                yield return $"/{a}";
+                var config = _lista.FirstOrDefault(cs => cs.Parametro.Contains(item.Key));
+                if (config != null)
+                    config.SetValue(item.Value);
+                else throw new Exception($"O parametro '{item.Key}' não é valido");
             }
         }
 
-        // TODO
-        // aceitar parametros que nao precisa ser informado um valor
-        // exemplo h|help v|verbose d|debug
-        internal void Parse(params string[] args)
+        private static Dictionary<string, string> ObterParametros(string[] args)
         {
+            Dictionary<string, string> parametros = new Dictionary<string, string>();
             for (int i = 0; i < args.Length; i++)
             {
-                string iParametro = null;
-                var config = this.FirstOrDefault(cp => JoinPrefix(cp.Parametro).Any(pp => args[i].StartsWith(iParametro = pp)));
-                if (config != null)
-                {
-                    if (args[i] == iParametro)
-                    {
-                        if (args.Length > i + 1)
-                        {
-                            i++;
-                            config.SetValue(args[i]);
-                        }
-                    }
-                    else if (args[i].StartsWith(iParametro, true, null))
-                    {
-                        var valor = args[i].Substring(iParametro.Length);
-                        if (valor.StartsWith(':') || valor.StartsWith('='))
-                            valor = valor.Substring(1);
-                        config.SetValue(valor);
-                    }
-                }
-                else throw new Exception($"parametro '{iParametro}' não é valido");
+                string key = null, value = null;
+                if (args[i].StartsWith("--") && args[i].Length > 3)
+                    (i, key, value) = GerarParametro(args, i);
+                else if (args[i].StartsWith('-') && args[i].Length > 1 && !args[i].StartsWith("--"))
+                    (i, key, value) = GerarParametroSimples(args, i);
+                else throw new Exception($"A opção informada não é um parametro: {args[i]}");
+                if (!parametros.ContainsKey(key))
+                    parametros.Add(key, value);
+                else throw new Exception($"Mesmo parametro informado 2x: {key}");
             }
+            return parametros;
+        }
+
+        static Func<string, bool> eOutroParametro = s =>
+            (s.Length > 3 && s.StartsWith("--")) ||
+            (s.Length > 1 && s.StartsWith('-') && !s.StartsWith("--"));
+
+        private static (int i, string key, string value) GerarParametro(string[] args, int i)
+        {
+            string value = null;
+            string key = args[i].Substring(2);
+            if (args.Length > i + 1)
+                if (!eOutroParametro(args[++i]))
+                    value = args[i];
+                else i--;
+            return (i, key, value);
+        }
+
+        private static (int i, string key, string value) GerarParametroSimples(string[] args, int i)
+        {
+            string value = null;
+            string key = args[i].Substring(1, 1);
+            if (args[i].Length > 2)
+                value = args[i].Substring(2);
+            else if (args.Length > i + 1)
+                if (!eOutroParametro(args[++i]))
+                    value = args[i];
+                else i--;
+            return (i, key, value);
         }
 
         public void Add(string descricao, string nome, Action<string> setValue)

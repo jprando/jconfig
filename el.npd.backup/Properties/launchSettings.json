@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "el.npd.backup": {
+      "commandName": "Project",
+      "commandLineArgs": "-h127.0.0.1 -p 5432   --user   postgres -w 12345 -ddadosdb --backup c:\\temp\\backup"
+    }
+  }
+}
