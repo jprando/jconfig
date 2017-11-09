@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace el.npd.backup
@@ -26,7 +26,6 @@ namespace el.npd.backup
                 catch (Exception) { }
             }
             Console.WriteLine(texto.ToString());
-
         }
     }
 }
