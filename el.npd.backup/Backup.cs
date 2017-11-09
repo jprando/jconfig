@@ -17,7 +17,11 @@ namespace el.npd.backup
         public void Run()
         {
             _config.VarDump();
-            Console.ReadKey();
+#if DEBUG
+            Console.WriteLine();
+            Console.WriteLine(" pressione uma tecla para continuar...");
+            Console.ReadKey(true);
+#endif        
         }
     }
 }
