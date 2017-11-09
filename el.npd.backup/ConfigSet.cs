@@ -11,10 +11,6 @@ namespace el.npd.backup
     {
         private ICollection<Options> _lista = new Collection<Options>();
 
-        public int Count => _lista.Count;
-
-        public bool IsReadOnly => _lista.IsReadOnly;
-
         internal void Parse(params string[] args)
         {
             Dictionary<string, string> parametros = ObterParametros(args);
@@ -45,7 +41,7 @@ namespace el.npd.backup
             return parametros;
         }
 
-        static Func<string, bool> eOutroParametro = s =>
+        private static Func<string, bool> eOutroParametro = s =>
             (s.Length > 3 && s.StartsWith("--")) ||
             (s.Length > 1 && s.StartsWith('-') && !s.StartsWith("--"));
 
@@ -76,13 +72,19 @@ namespace el.npd.backup
         public void Add(string descricao, string nome, Action<string> setValue)
             => _lista.Add(new Options(nome, descricao, setValue));
 
+        #region ligacao
+        public int Count => _lista.Count;
+        public bool IsReadOnly => _lista.IsReadOnly;
         IEnumerator IEnumerable.GetEnumerator() => _lista.GetEnumerator();
         public IEnumerator<Options> GetEnumerator() => _lista.GetEnumerator();
         public bool Contains(Options item) => _lista.Contains(item);
+        #endregion
 
+        #region nao implementado
         public void Add(Options item) => throw new NotImplementedException();
         public void Clear() => throw new NotImplementedException();
         public void CopyTo(Options[] array, int arrayIndex) => throw new NotImplementedException();
         public bool Remove(Options item) => throw new NotImplementedException();
+        #endregion
     }
 }
