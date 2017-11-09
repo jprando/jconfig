@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace el.npd.backup
 {
@@ -13,15 +14,19 @@ namespace el.npd.backup
         {
             var tipo = variavel.GetType();
             var props = tipo.GetProperties();
-            Console.WriteLine();
-            Console.WriteLine($" #VARDUMP {tipo.FullName}");
-            Console.WriteLine();
+            StringBuilder texto = new StringBuilder();
+            texto.AppendLine($"{Environment.NewLine} #VARDUMP {tipo.FullName}{Environment.NewLine}");
             foreach (var item in props)
             {
-                var valor = item.GetValue(variavel);
-                Console.WriteLine($" {item.Name,-18} : {valor}");
+                try
+                {
+                    var valor = item.GetValue(variavel);
+                    texto.AppendLine($" {item.Name,-18} : {valor}");
+                }
+                catch (Exception) { }
             }
-            Console.WriteLine();
+            Console.WriteLine(texto.ToString());
+
         }
     }
 }

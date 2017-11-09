@@ -18,9 +18,11 @@ namespace el.npd.backup
         {
             _config.VarDump();
 #if DEBUG
-            Console.WriteLine();
-            Console.WriteLine(" pressione uma tecla para continuar...");
-            Console.ReadKey(true);
+            if (!Console.IsInputRedirected)
+            {
+                Console.WriteLine($"{Environment.NewLine} pressione uma tecla para continuar...");
+                Console.ReadKey(true);
+            }
 #endif        
         }
     }
